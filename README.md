@@ -1,6 +1,6 @@
 # Authentifier des utilisateurs et simuler un mode connecté
 
-## Auteur(s)
+## PINON Mathias 
 
 ## Installation / Configuration
 
