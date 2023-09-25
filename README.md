@@ -5,7 +5,7 @@
 ## Installation / Configuration
 
 ### Installation par `Composer`
-
+~~~~~~~~
 Lancer `composer install` pour installer [PHP Coding Standards Fixer](https://cs.symfony.com/) et le configurer dans PhpStorm (le fichier `.php-cs-fixer.php` contient les règles personnalisées basées sur la recommandation [Symfony](https://symfony.com/doc/current/contributing/code/standards.html))
 
 ### Configurer PhpStorm
