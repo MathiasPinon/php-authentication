@@ -6,6 +6,7 @@ namespace Entity;
 
 use Database\MyPdo;
 use Entity\Exception\EntityNotFoundException;
+use PDO;
 
 class User
 {
@@ -58,14 +59,15 @@ class User
     public static function findByCredentials(string $login , string $password){
         $sql = MyPdo::getInstance()->prepare(
             <<<SQL
-            SELECT id , lastName , firstName , login , sha512pass, phone 
+            SELECT id , lastName , firstName , login , phone 
             FROM user 
             WHERE login = :login 
+            AND sha512pass = SHA2(:pass,512)
 SQL
         );
 
-        $sql->execute([":login" => $login]);
-        $sql->setFetchMode(User::class);
+        $sql->execute([":login" => $login , ":pass"=>$password]);
+        $sql->setFetchMode(PDO::FETCH_CLASS,User::class);
         $user = $sql->fetch();
         if ($user === false) {
             throw new EntityNotFoundException("Login non trouvé");
