@@ -3,7 +3,8 @@
 declare(strict_types=1);
 
 namespace Authentication;
-
+use Authentication\Exception\AuthenticationException;
+use Entity\User;
 use Html\StringEscaper;
 
 class UserAuthentication
@@ -27,7 +28,16 @@ class UserAuthentication
                     </form>
                     </body> 
 HTML;
+    }
 
+    public function getUserFromAuth(){
+        $user = User::findByCredentials($_POST['login'],$_POST['password']);
+         if( $user !== NULL) {
+             return $user;
+         }
+         else {
+             throw new AuthenticationException("Vous ne vous êtes pas authentifié");
+         }
     }
 }
 
