@@ -14,15 +14,16 @@ class UserAuthentication
     const PASSWORD_INPUT_NAME = "password";
     public function loginForm(string $action,string $submitTest = "OK") : string
     {
-
+        $log = self::LOGIN_INPUT_NAME;
+        $pass = self::PASSWORD_INPUT_NAME;
         return <<<HTML
                     <body>
                     <form action="{$action}" method="post" ">
                         <label> login
-                        <input name="login" type="text">
+                        <input name="{$log}" type="text">
                         </label>
                         <label> password
-                        <input name="password" type="password">
+                        <input name="{$pass}" type="password">
                         </label>
                         <button type="submit">{$this->escapeString($submitTest)}</button>
                     </form>
