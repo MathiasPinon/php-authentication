@@ -6,12 +6,17 @@ namespace Authentication;
 use Authentication\Exception\AuthenticationException;
 use Entity\User;
 use Html\StringEscaper;
-
+use Service\Session;
 class UserAuthentication
 {
+
     use StringEscaper ;
     const LOGIN_INPUT_NAME = "login";
     const PASSWORD_INPUT_NAME = "password";
+    private const SESSION_KEY = '__UserAuthentication__';
+    private const SESSION_USER_KEY = 'user';
+    private ?User $user = NULL ;
+
     public function loginForm(string $action,string $submitTest = "OK") : string
     {
         $log = self::LOGIN_INPUT_NAME;
@@ -34,11 +39,19 @@ HTML;
     public function getUserFromAuth(){
         $user = User::findByCredentials($_POST['login'],$_POST['password']);
          if( $user !== NULL) {
-             return $user;
+             $this->setUser($user);
          }
          else {
              throw new AuthenticationException("Vous ne vous êtes pas authentifié");
          }
+    }
+
+    public function setUser(User $user): void
+    {
+        Session::start() ;
+        $this->user = $user ;
+        $_SESSION[self::SESSION_KEY] = $user ;
+
     }
 }
 
