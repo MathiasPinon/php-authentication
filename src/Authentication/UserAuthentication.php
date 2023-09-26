@@ -40,6 +40,7 @@ HTML;
         $user = User::findByCredentials($_POST['login'],$_POST['password']);
          if( $user !== NULL) {
              $this->setUser($user);
+             return $user;
          }
          else {
              throw new AuthenticationException("Vous ne vous êtes pas authentifié");
@@ -52,6 +53,15 @@ HTML;
         $this->user = $user ;
         $_SESSION[self::SESSION_KEY] = $user ;
 
+    }
+
+    public function isUserConnected(){
+        if (isset($_SESSION[self::SESSION_KEY]))
+        {
+            if(gettype($_SESSION[self::SESSION_KEY]) === User::class ) {
+                return true;
+            }
+        }
     }
 }
 
