@@ -108,7 +108,11 @@ HTML;
      */
     public function __construct()
     {
-        $user = $this->getUserFromSession();
+        $this->getUserFromSession();
+        try{
+            $user = $this->getUserFromSession();
+        }
+
     }
 
     /**
