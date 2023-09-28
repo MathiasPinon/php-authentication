@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Authentication;
 
 use Authentication\Exception\AuthenticationException;
+use Authentication\Exception\NotLoggedInException;
 use Entity\User;
 use Html\StringEscaper;
+use Service\Exception\SessionException;
 use Service\Session;
 
 class UserAuthentication
@@ -17,6 +19,7 @@ class UserAuthentication
     private const SESSION_KEY = '__UserAuthentication__';
     private const SESSION_USER_KEY = 'user';
     private ?User $user = null;
+    private const LOGOUT_INPUT_NAME = 'logout';
 
     public function loginForm(string $action, string $submitTest = 'OK'): string
     {
@@ -24,7 +27,6 @@ class UserAuthentication
         $pass = self::PASSWORD_INPUT_NAME;
 
         return <<<HTML
-                    <body>
                     <form action="{$action}" method="post" ">
                         <label> login
                         <input name="{$log}" type="text">
@@ -34,7 +36,6 @@ class UserAuthentication
                         </label>
                         <button type="submit">{$this->escapeString($submitTest)}</button>
                     </form>
-                    </body> 
 HTML;
     }
 
@@ -66,6 +67,59 @@ HTML;
         }
 
         return false;
-        //return isset($_SESSION[self::SESSION_USER_KEY]) && $_SESSION[self::SESSION_USER_KEY] instanceof User;
+        // return isset($_SESSION[self::SESSION_USER_KEY]) && $_SESSION[self::SESSION_USER_KEY] instanceof User;
+    }
+
+    public function logoutForm(string $action, string $text): string
+    {
+        $log = self::LOGOUT_INPUT_NAME;
+
+        return <<<HTML
+                    <form action="{$action}" method="post" >
+                    <button type="submit" name="$log">{$this->escapeString($text)}</button>
+                    </form>
+                HTML;
+    }
+
+    public function logoutIfRequested()
+    {
+        $log = self::LOGOUT_INPUT_NAME;
+        if (isset($_POST[$log])) {
+            Session::start();
+            unset($_SESSION[self::SESSION_USER_KEY]);
+        }
+    }
+
+    /**
+     * @throws SessionException
+     * @throws NotLoggedInException
+     */
+    public function getUserFromSession()
+    {
+        Session::start();
+        if (isset($_SESSION[self::SESSION_USER_KEY])) {
+            return $_SESSION[self::SESSION_USER_KEY];
+        }
+        throw new NotLoggedInException("Erreur il y a pas d'utilisateur dans la sesson");
+    }
+
+    /**
+     * @throws NotLoggedInException
+     */
+    public function __construct()
+    {
+        $user = $this->getUserFromSession();
+    }
+
+    /**
+     * @throws NotLoggedInException
+     */
+    public function getUser()
+    {
+        if (isset($this->user)) {
+            return $this->user;
+        } else {
+            throw new NotLoggedInException();
+        }
     }
 }
