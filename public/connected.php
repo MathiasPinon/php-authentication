@@ -9,7 +9,7 @@ $authentication = new UserAuthentication();
 
 // Un utilisateur est-il connecté ?
 if (!$authentication->isUserConnected()) {
-    header("Location: /form.php");
+    // header("Location: /form.php");
     exit; // Fin du programme
 }
 
