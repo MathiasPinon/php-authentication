@@ -41,7 +41,7 @@ HTML;
 
     public function getUserFromAuth()
     {
-        $user = User::findByCredentials($_POST['login'], $_POST['password']);
+        $user = User::findByCredentials($_POST['login'] ?? '', $_POST['password'] ?? '');
         if (null !== $user) {
             $this->setUser($user);
 

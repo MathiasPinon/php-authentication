@@ -7,7 +7,6 @@ use Html\AppWebPage;
 
 $authentication = new UserAuthentication();
 $title = 'Zone membre connecté';
-$user = $authentication->getUser();
 $p = new AppWebPage($title);
 // Un utilisateur est-il connecté ?
 
@@ -16,10 +15,10 @@ if (!$authentication->isUserConnected()) {
     exit;
 }
 
-
+$user = $authentication->getUser();
 $p->appendContent(<<<HTML
         <h1>$title</h1>
-        <p> {$user->getFirstName()}
+        <a href="user.php"> {$user->getFirstName()} </a>
 HTML
 );
 
