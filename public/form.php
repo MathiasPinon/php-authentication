@@ -17,13 +17,17 @@ $p->appendCSS(<<<CSS
     }
 CSS
 );
-if ($authentication->isUserConnected()) {
+try {
+    $user = $authentication->getUser();
     $form = $authentication->logoutForm('form.php', 'Logout');
     $p->appendContent(<<<HTML
     {$form}
+    <br>
+    {$user->getFirstName()}
+    {$user->getLastName()}
 HTML
     );
-} else {
+} catch (\Authentication\Exception\NotLoggedInException $e){
     // Production du formulaire de connexion
     $form = $authentication->loginForm('auth.php');
     $p->appendContent(<<<HTML

@@ -85,6 +85,7 @@ HTML;
     {
         $log = self::LOGOUT_INPUT_NAME;
         if (isset($_POST[$log])) {
+            $this->user = NULL ;
             Session::start();
             unset($_SESSION[self::SESSION_USER_KEY]);
         }
@@ -104,13 +105,13 @@ HTML;
     }
 
     /**
-     * @throws NotLoggedInException
+     * @throws NotLoggedInException|SessionException
      */
     public function __construct()
     {
-        $this->getUserFromSession();
-        try{
-            $user = $this->getUserFromSession();
+        try {
+            $this->user = $this->getUserFromSession();
+        } catch (NotLoggedInException $exception) {
         }
 
     }
@@ -123,7 +124,7 @@ HTML;
         if (isset($this->user)) {
             return $this->user;
         } else {
-            throw new NotLoggedInException();
+            throw new NotLoggedInException("Il y a pas de d'utilisateur dans la session");
         }
     }
 }
