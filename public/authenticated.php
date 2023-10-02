@@ -6,19 +6,20 @@ use Authentication\UserAuthentication;
 use Html\AppWebPage;
 
 $authentication = new UserAuthentication();
-
+$title = 'Zone membre connecté';
+$user = $authentication->getUser();
+$p = new AppWebPage($title);
 // Un utilisateur est-il connecté ?
+
 if (!$authentication->isUserConnected()) {
     header("Location: /form.php");
-    exit; // Fin du programme
+    exit;
 }
 
-$title = 'Zone membre connecté';
-$p = new AppWebPage($title);
 
 $p->appendContent(<<<HTML
         <h1>$title</h1>
-        <h2>Page 1</h2>
+        <p> {$user->getFirstName()}
 HTML
 );
 
