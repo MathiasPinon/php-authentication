@@ -10,14 +10,8 @@ $authentication = new UserAuthentication();
 $p = new AppWebPage('Authentification');
 try {
     $user = $authentication->getUser();
-    $p->appendContent(<<<HTML
-<div>Id :  {$user->getId()}</div>
-<div>Nom : {$user->getLastName()}</div>
-<div>Prenom : {$user->getFirstName()}</div>
-<div>Login :  {$user->getLogin()}</div>
-<div>Téléphone {$user->getPhone()}</div>
-HTML
-    );
+    $html = new \Html\UserProfileWithAvatar($user);
+    $p->appendContent($html->toHtml());
 } catch (\Authentication\Exception\NotLoggedInException $e) {
     header('Location: /form.php');
 } catch (Exception $e) {
