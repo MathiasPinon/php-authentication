@@ -17,12 +17,15 @@ class UserAvatar
         return $this->avatar;
     }
 
+    /**
+     * @throws EntityNotFoundException
+     */
     public static function findById(int $userId)
     {
         $sql = MyPdo::getInstance()->prepare(
             <<<SQL
             SELECT id , avatar
-            FROM User 
+            FROM user 
             WHERE id = :id 
 SQL
         );
@@ -31,9 +34,10 @@ SQL
         $sql->setFetchMode(\PDO::FETCH_CLASS, UserAvatar::class)
         ;
         $user = $sql->fetch();
-        if($user === false ){
+        if (false === $user) {
             throw new EntityNotFoundException("Il n'y a pas de ligne séléctionnée");
         }
-        return $user ;
+
+        return $user;
     }
 }
