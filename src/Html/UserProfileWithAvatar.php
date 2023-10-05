@@ -6,6 +6,8 @@ namespace Html;
 
 class UserProfileWithAvatar extends UserProfile
 {
+    public const AVATAR_INPUT_NAME =  'avatar' ;
+    private string $formAction ;
     public function toHtml(){
         $id = $this->user->getId();
         return <<<HTML

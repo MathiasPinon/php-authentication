@@ -40,4 +40,25 @@ SQL
 
         return $user;
     }
+
+    /**
+     * @param string|null $avatar
+     */
+    public function setAvatar(?string $avatar): void
+    {
+        $this->avatar = $avatar;
+    }
+
+    public function save():UserAvatar
+    {
+        $sql = MyPdo::getInstance()->prepare(
+          <<<SQL
+            UPDATE user
+            SET avatar = :avatar 
+            WHERE id = :id
+SQL
+        );
+        $sql->execute([':avatar'=>$this->avatar, ':id'=>$this->id ]);
+        return $this ;
+    }
 }
